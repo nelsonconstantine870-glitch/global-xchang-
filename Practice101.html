@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global XChange // Bank Fee Simulator</title>
+    <link rel="stylesheet" href="Style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="glass-container">
+        
+        <nav class="tab-navigation">
+            <a href="index.html" class="nav-tab"><i class="fa-solid fa-right-left"></i> Exchange</a>
+            <a href="Practice101.html" class="nav-tab active"><i class="fa-solid fa-building-columns"></i> Bank Fees</a>
+        </nav>
+
+        <header>
+            <h1><i class="fa-solid fa-calculator text-gradient"></i> Fee Simulator</h1>
+            <p>Calculate hidden bank deductions instantly</p>
+        </header>
+
+        <main class="converter-box">
+            
+            <div class="input-group" style="position: relative;">
+                <label for="bank-search">Bank Name</label>
+                <div class="search-wrapper" style="margin-bottom: 0;">
+                    <i class="fa-solid fa-building-columns search-icon" style="left:16px; position:absolute; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                    <input type="text" id="bank-search" placeholder="Type bank name (e.g., GTBank, Access, OPay)..." style="padding-left: 44px; width: 100%;" autocomplete="off">
+                </div>
+                <div id="bank-dropdown" class="options-list" style="position: absolute; top: 100%; left: 0; width: 100%; max-height: 200px; overflow-y: auto; display: none; z-index: 10; background: #0f172a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; margin-top: 4px;"></div>
+            </div>
+
+            <div class="conversion-row" style="align-items: stretch;">
+                <div class="input-group">
+                    <label for="fee-amount">Input Money</label>
+                    <input type="number" id="fee-amount" value="10000" min="1" placeholder="Amount...">
+                </div>
+                <div class="input-group" style="max-width: 130px;">
+                    <label for="fee-percentage">Percentage</label>
+                    <input type="number" id="fee-percentage" value="12" min="0" max="100" placeholder="%">
+                </div>
+            </div>
+
+            <div class="conversion-row">
+                <div class="select-box">
+                    <label>Native Currency</label>
+                    <div id="from-selector" class="custom-select-trigger">
+                        <span id="from-display">USD - US Dollar</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="select-box">
+                    <label>Converted To</label>
+                    <div id="to-selector" class="custom-select-trigger">
+                        <span id="to-display">NGN - Nigerian Naira</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-area" style="text-align: left; display: flex; flex-direction: column; gap: 16px;">
+                
+                <div style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
+                    <h4 style="font-size: 0.75rem; text-transform: uppercase; color: var(--parallel-color); margin-bottom: 6px; letter-spacing: 0.5px;">Total Deductions</h4>
+                    <p id="deduct-native" style="font-size: 1.15rem; font-weight: 700; margin-bottom: 2px;">Native: Calculating...</p>
+                    <p id="deduct-foreign" style="font-size: 1rem; color: var(--text-muted);">Foreign: Calculating...</p>
+                </div>
+
+                <div>
+                    <h4 style="font-size: 0.75rem; text-transform: uppercase; color: var(--official-color); margin-bottom: 6px; letter-spacing: 0.5px;">Actual Money Remaining</h4>
+                    <p id="remain-native" style="font-size: 1.15rem; font-weight: 700; margin-bottom: 2px;">Native: Calculating...</p>
+                    <p id="remain-foreign" style="font-size: 1rem; color: var(--text-muted);">Foreign: Calculating...</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="search-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Select Currency</h3>
+                <button id="close-modal-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="currency-search-input" placeholder="Search code or country...">
+            </div>
+            <div id="modal-options-list" class="options-list"></div>
+        </div>
+    </div>
+
+    <script src="Nel.js"></script>
+</body>
+</html>
