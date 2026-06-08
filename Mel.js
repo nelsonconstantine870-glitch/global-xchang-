@@ -1,5 +1,5 @@
 const SPECIAL_PARALLEL_OVERRIDES = {
-    "NGN": 15000.50,  
+    "NGN": 1392.50,  
     "ARS": 1415.00,   
     "EGP": 54.25,    
     "VES": 745.00
