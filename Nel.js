@@ -1,26 +1,30 @@
 // ==========================================
-// 1. DATABASE & CONFIGURATION
+// 1. DATABASE & CONFIGURATION (GLOBAL US/UK/NG)
 // ==========================================
 
 const BANK_DATABASE = [
-  { name: "Moniepoint POS", fee: 1.2, info: "Standard merchant withdrawal charge" },
-  { name: "OPay / PalmPay Agent", fee: 1.5, info: "Average cashout/POS agent charge" },
-  { name: "Binance P2P Merchant", fee: 2.0, info: "Average escrow safety/market variance" },
-  { name: "Western Union (Bank Deposit)", fee: 2.5, info: "Hidden exchange rate markup" },
-  { name: "Wema Bank (ALAT)", fee: 3.0, info: "Digital card rate markup" },
-  { name: "GTBank (Guaranty Trust)", fee: 3.5, info: "International card fee" },
-  { name: "UBA (United Bank for Africa)", fee: 3.5, info: "International card fee" },
-  { name: "Payoneer Card", fee: 3.5, info: "ATM cross-border usage fee" },
-  { name: "Zenith Bank", fee: 3.8, info: "International card fee" },
-  { name: "Skrill Wallet", fee: 3.99, info: "Internal conversion/transfer fee" },
-  { name: "Access Bank", fee: 4.0, info: "International card fee" },
-  { name: "PayPal (Goods & Services)", fee: 4.4, info: "Standard merchant receive fee" }
+  // --- Global Freelancer/Digital Paths ---
+  { name: "Wise (TransferWise)", fee: 0.45, info: "Mid-market rate baseline cross-border utility" },
+  { name: "Revolut Premium", fee: 0.5, info: "Cross-currency baseline workspace conversion" },
+  { name: "Moniepoint POS / Business", fee: 1.2, info: "Standard baseline merchant conversion layout" },
+  { name: "OPay / PalmPay Business", fee: 1.5, info: "Agent wallet micro-deduction margin profile" },
+  { name: "Starling Bank (UK)", fee: 2.0, info: "International card purchase / exchange spread" },
+  { name: "Binance P2P Escrow", fee: 2.0, info: "Average market variation safety clearance" },
+  { name: "Western Union Speed Transfer", fee: 2.5, info: "Retail client programmatic rate markup" },
+  { name: "Barclays Bank (UK Exchange)", fee: 2.75, info: "Traditional retail cross-border transaction rate" },
+  { name: "Chase Bank (US Mobile)", fee: 3.0, info: "Standard global debit markup tiering" },
+  { name: "Bank of America (International)", fee: 3.0, info: "Foreign transactions assessment index" },
+  { name: "Wema Bank (ALAT Custom)", fee: 3.0, info: "Digital proxy system valuation index" },
+  { name: "GTBank (Guaranty Trust)", fee: 3.5, info: "Standard international network processing" },
+  { name: "UBA Domiciliary Operations", fee: 3.5, info: "Inbound settlement network pipeline clearance" },
+  { name: "Payoneer Professional Card", fee: 3.5, info: "Global ATM ecosystem operations framework" },
+  { name: "Zenith Global Settlement", fee: 3.8, info: "Corporate client foreign interface surcharge" },
+  { name: "Skrill Digital Wallet", fee: 3.99, info: "Merchant processing currency gateway allocation" },
+  { name: "Access Bank Cards", fee: 4.0, info: "Cross-border clearing network execution fee" },
+  { name: "PayPal Invoice Settlement", fee: 4.4, info: "Standard cross-currency commercial processing rate" }
 ];
 
-// Base dictionary for symbols. If a currency isn't here, it falls back to its 3-letter code.
 const CURRENCY_DATABASE = {
-
-  // --- African Currencies (From 1780667664973.jpeg and more) ---
   "GHS": { name: "Ghanaian Cedi", symbol: "₵" },
   "KES": { name: "Kenyan Shilling", symbol: "KSh" },
   "ZAR": { name: "South African Rand", symbol: "R" },
@@ -59,8 +63,6 @@ const CURRENCY_DATABASE = {
   "SZL": { name: "Swazi Lilangeni", symbol: "L" },
   "SSP": { name: "South Sudanese Pound", symbol: "£" },
   "STN": { name: "São Tomé and Príncipe Dobra", symbol: "Db" },
-
-  // --- Major Global Currencies ---
   "USD": { name: "United States Dollar", symbol: "$" },
   "EUR": { name: "Euro", symbol: "€" },
   "GBP": { name: "British Pound Sterling", symbol: "£" },
@@ -73,77 +75,10 @@ const CURRENCY_DATABASE = {
   "NZD": { name: "New Zealand Dollar", symbol: "NZ$" },
   "SEK": { name: "Swedish Krona", symbol: "kr" },
   "SGD": { name: "Singapore Dollar", symbol: "S$" },
-
-  // --- Americas ---
-  "ARS": { name: "Argentine Peso", symbol: "$" },
-  "BRL": { name: "Brazilian Real", symbol: "R$" },
-  "CLP": { name: "Chilean Peso", symbol: "$" },
-  "COP": { name: "Colombian Peso", symbol: "$" },
-  "MXN": { name: "Mexican Peso", symbol: "$" },
-  "PEN": { name: "Peruvian Sol", symbol: "S/." },
-  "UYU": { name: "Uruguayan Peso", symbol: "$U" },
-  "VEF": { name: "Venezuelan Bolívar", symbol: "Bs.F" },
-  "CRC": { name: "Costa Rican Colón", symbol: "₡" },
-  "DOP": { name: "Dominican Peso", symbol: "RD$" },
-  "GTQ": { name: "Guatemalan Quetzal", symbol: "Q" },
-  "HNL": { name: "Honduran Lempira", symbol: "L" },
-  "NIO": { name: "Nicaraguan Córdoba", symbol: "C$" },
-  "PAB": { name: "Panamanian Balboa", symbol: "B/." },
-  "PYG": { name: "Paraguayan Guaraní", symbol: "₲" },
-  "TTD": { name: "Trinidad and Tobago Dollar", symbol: "TT$" },
-  "BBD": { name: "Barbadian Dollar", symbol: "Bds$" },
-  "JMD": { name: "Jamaican Dollar", symbol: "J$" },
-  "BSD": { name: "Bahamian Dollar", symbol: "B$" },
-
-  // --- Asia ---
   "INR": { name: "Indian Rupee", symbol: "₹" },
-  "IDR": { name: "Indonesian Rupiah", symbol: "Rp" },
-  "ILS": { name: "Israeli New Shekel", symbol: "₪" },
-  "KRW": { name: "South Korean Won", symbol: "₩" },
-  "MYR": { name: "Malaysian Ringgit", symbol: "RM" },
-  "PHP": { name: "Philippine Peso", symbol: "₱" },
-  "PKR": { name: "Pakistani Rupee", symbol: "₨" },
-  "THB": { name: "Thai Baht", symbol: "฿" },
   "TRY": { name: "Turkish Lira", symbol: "₺" },
-  "TWD": { name: "New Taiwan Dollar", symbol: "NT$" },
-  "VND": { name: "Vietnamese Dong", symbol: "₫" },
   "AED": { name: "United Arab Emirates Dirham", symbol: "د.إ" },
-  "AFN": { name: "Afghan Afghani", symbol: "؋" },
-  "BDT": { name: "Bangladeshi Taka", symbol: "৳" },
-  "BHD": { name: "Bahraini Dinar", symbol: ".د.ب" },
-  "BND": { name: "Brunei Dollar", symbol: "B$" },
-  "KHR": { name: "Cambodian Riel", symbol: "៛" },
-  "IRR": { name: "Iranian Rial", symbol: "﷼" },
-  "IQD": { name: "Iraqi Dinar", symbol: "ع.د" },
-  "JOD": { name: "Jordanian Dinar", symbol: "د.ا" },
-  "KWD": { name: "Kuwaiti Dinar", symbol: "د.ك" },
-  "LKR": { name: "Sri Lankan Rupee", symbol: "Rs" },
-  "LAK": { name: "Lao Kip", symbol: "₭" },
-  "MMK": { name: "Myanmar Kyat", symbol: "K" },
-  "MNT": { name: "Mongolian Tögrög", symbol: "₮" },
-  "NPR": { name: "Nepalese Rupee", symbol: "₨" },
-  "OMR": { name: "Omani Rial", symbol: "ر.ع." },
-  "QAR": { name: "Qatari Riyal", symbol: "ر.ق" },
-  "SAR": { name: "Saudi Riyal", symbol: "ر.س" },
-  "LBN": { name: "Lebanese Pound", symbol: "ل.ل" },
-
-  // --- Europe & Remaining Regions ---
-  "DKK": { name: "Danish Krone", symbol: "kr" },
-  "NOK": { name: "Norwegian Krone", symbol: "kr" },
-  "PLN": { name: "Polish Zloty", symbol: "zł" },
-  "RUB": { name: "Russian Ruble", symbol: "₽" },
-  "UAH": { name: "Ukrainian Hryvnia", symbol: "₴" },
-  "CZK": { name: "Czech Koruna", symbol: "Kč" },
-  "HUF": { name: "Hungarian Forint", symbol: "Ft" },
-  "BGN": { name: "Bulgarian Lev", symbol: "лв" },
-  "RON": { name: "Romanian Leu", symbol: "lei" },
-  "ISK": { name: "Icelandic Króna", symbol: "kr" },
-  "HRK": { name: "Croatian Kuna", symbol: "kn" },
-  "RSD": { name: "Serbian Dinar", symbol: "дин." },
-  "FJD": { name: "Fijian Dollar", symbol: "FJ$" },
-  "PGK": { name: "Papua New Guinean Kina", symbol: "K" },
-  "WST": { name: "Samoan Tālā", symbol: "WS$" },
-  "VUV": { name: "Vanuatu Vatu", symbol: "VT" }
+  "SAR": { name: "Saudi Riyal", symbol: "ر.س" }
 };
 
 // ==========================================
@@ -153,6 +88,7 @@ let officialRatesUSD = {};
 let selectedFromCode = "USD";
 let selectedToCode = "NGN";
 let activeTargetType = "from"; 
+let currentMode = "convert"; // Options: 'convert', 'transfer', 'swift'
 
 const feeAmountInput = document.getElementById('fee-amount');
 const feePercentageInput = document.getElementById('fee-percentage');
@@ -168,6 +104,7 @@ const deductNative = document.getElementById('deduct-native');
 const deductForeign = document.getElementById('deduct-foreign');
 const remainNative = document.getElementById('remain-native');
 const remainForeign = document.getElementById('remain-foreign');
+const breakdownNotices = document.getElementById('breakdown-notices');
 
 const searchModal = document.getElementById('search-modal');
 const modalTitle = document.getElementById('modal-title');
@@ -175,8 +112,13 @@ const currencySearchInput = document.getElementById('currency-search-input');
 const optionsList = document.getElementById('modal-options-list');
 const closeModalBtn = document.getElementById('close-modal-btn');
 
+// Mode Buttons
+const btnModeConvert = document.getElementById('btn-mode-convert');
+const btnModeTransfer = document.getElementById('btn-mode-transfer');
+const btnModeSwift = document.getElementById('btn-mode-swift');
+
 // ==========================================
-// 3. CORE OFFICIAL EXCHANGE MECHANICS
+// 3. CORE EXCHANGE & ADVANCED FEE LOGIC
 // ==========================================
 
 async function fetchRates() {
@@ -196,26 +138,65 @@ function calculateFees() {
   const amount = parseFloat(feeAmountInput.value) || 0;
   const percent = parseFloat(feePercentageInput.value) || 0;
 
-  // Deduction math
-  const nativeDeducted = amount * (percent / 100);
-  const nativeRemaining = amount - nativeDeducted;
+  let nativeExtraCharges = 0;
+  let foreignExtraCharges = 0;
+  let noticesText = [];
 
-  // DIRECT OFFICIAL RATES LOOKUP (No overrides, no manual spreads)
   const fromRate = officialRatesUSD[selectedFromCode] || 1.0;
   const toRate = officialRatesUSD[selectedToCode] || 1.0;
-  
-  // Cross currency math formula: (Amount / From Rate) * To Rate
   const conversionFactor = toRate / fromRate;
 
-  const foreignDeducted = nativeDeducted * conversionFactor;
-  const foreignRemaining = nativeRemaining * conversionFactor;
+  // Mode Logic Simulation
+  if (currentMode === "transfer") {
+    // Convert & Local Account Transfer Mode
+    if (selectedToCode === "NGN") {
+      // 1. Calculate dynamic simulation value
+      let calculatedTargetVal = amount * conversionFactor;
+      
+      // 2. Local NGN processing mechanics: N50 EMTL for transactions >= N10,000
+      if (calculatedTargetVal >= 10000) {
+        foreignExtraCharges += 50;
+        noticesText.push("+ ₦50.00 Electronic Money Transfer Levy (EMTL) applied");
+      }
+      // 3. Interbank standard transaction execution fee
+      foreignExtraCharges += 20;
+      noticesText.push("+ ₦20.00 Flat Interbank Transfer Processing Fee");
+    } else if (selectedToCode === "GBP") {
+      foreignExtraCharges += 0.50; // Average Faster Payments micro-fee
+      noticesText.push("+ £0.50 UK Faster Payments processing charge");
+    } else if (selectedToCode === "USD") {
+      foreignExtraCharges += 0.25; // Average ACH network clearance cost
+      noticesText.push("+ $0.25 US Local ACH delivery fee");
+    }
+  } else if (currentMode === "swift") {
+    // Raw Foreign Wire Mode (Bypassing local settlement)
+    if (selectedFromCode === "USD" || selectedFromCode === "GBP" || selectedFromCode === "EUR") {
+      nativeExtraCharges += 20; // Simulated $20 flat SWIFT wire execution fee
+      noticesText.push(`+ ${selectedFromCode} 20.00 Flat SWIFT Telecommunication/Cable Charge`);
+    } else {
+      nativeExtraCharges += (amount * 0.005); // Global standard correspondent ledger deduction index
+      noticesText.push("+ 0.5% Estimated Intermediary Bank Network clearing fee");
+    }
+  }
+
+  // Baseline Percentage Percentage Math
+  const nativePercentageDeduct = amount * (percent / 100);
+  const totalNativeDeductions = nativePercentageDeduct + nativeExtraCharges;
+  const nativeRemaining = Math.max(0, amount - totalNativeDeductions);
+
+  // Conversion Execution Logic
+  const foreignPercentageDeduct = nativePercentageDeduct * conversionFactor;
+  const totalForeignDeductions = foreignPercentageDeduct + foreignExtraCharges + (nativeExtraCharges * conversionFactor);
+  const foreignRemaining = Math.max(0, (amount * conversionFactor) - totalForeignDeductions);
 
   const fromSym = CURRENCY_DATABASE[selectedFromCode]?.symbol || selectedFromCode;
   const toSym = CURRENCY_DATABASE[selectedToCode]?.symbol || selectedToCode;
 
-  // Render UI updates
-  deductNative.innerHTML = `Native: <span style="color: #3b82f6;">${fromSym}${nativeDeducted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
-  deductForeign.innerHTML = `Converted: <span>${toSym}${foreignDeducted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
+  // Display Output Logic
+  breakdownNotices.innerHTML = noticesText.length > 0 ? noticesText.join("<br>") : "Pure currency conversion environment active.";
+
+  deductNative.innerHTML = `Native: <span style="color: #3b82f6;">${fromSym}${totalNativeDeductions.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
+  deductForeign.innerHTML = `Converted: <span>${toSym}${totalForeignDeductions.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
   
   remainNative.innerHTML = `Native: <span style="color: #10b981;">${fromSym}${nativeRemaining.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
   remainForeign.innerHTML = `Converted: <span>${toSym}${foreignRemaining.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
@@ -238,18 +219,18 @@ function filterBanksByPercentage(targetPercent) {
     const closest = BANK_DATABASE.reduce((prev, curr) => (prev.fee < curr.fee) ? prev : curr);
     html = `
       <div style="padding: 12px; color: #9ca3af; font-size: 0.85rem;">
-        No bank matches this low rate. Showing lowest alternative option:
+        No database entry matches this low margin. Lowest alternative option:
       </div>
       <div class="option-item bank-item" data-fee="${closest.fee}" data-name="${closest.name}" style="padding: 12px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer;">
         <div>
           <div style="font-weight: 600; color: #fff; font-size: 0.9rem;">${closest.name}</div>
-          <div style="font-size: 0.75rem; color: #ef4444;">Exceeds target budget</div>
+          <div style="font-size: 0.75rem; color: #ef4444;">Exceeds target boundary conditions</div>
         </div>
         <span style="color: #ef4444; font-weight: 700; font-size: 0.9rem;">${closest.fee}%</span>
       </div>
     `;
   } else {
-    html = `<div style="padding: 8px 12px; font-size: 0.75rem; color: #10b981; text-transform: uppercase; font-weight: 700; background: rgba(255,255,255,0.02);">Banks within your ${targetPercent}% limit:</div>`;
+    html = `<div style="padding: 8px 12px; font-size: 0.75rem; color: #10b981; text-transform: uppercase; font-weight: 700; background: rgba(255,255,255,0.02);">Platforms within your ${targetPercent}% tier:</div>`;
     affordableBanks.forEach(bank => {
       html += `
         <div class="option-item bank-item" data-fee="${bank.fee}" data-name="${bank.name}" style="padding: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer;">
@@ -279,7 +260,7 @@ function renderBankOptions(filterText = "") {
   let html = "";
 
   if (matches.length === 0) {
-    html = `<div style="padding: 12px; color: #9ca3af; font-size: 0.85rem;">No matching bank criteria tracked.</div>`;
+    html = `<div style="padding: 12px; color: #9ca3af; font-size: 0.85rem;">No matching global profile tracked.</div>`;
   } else {
     matches.forEach(bank => {
       html += `
@@ -310,7 +291,6 @@ function attachBankClickHandlers() {
   });
 }
 
-// Automatically pulls ALL 160+ official live currency fields dynamically
 function renderModalOptions(filterText = "") {
   let query = filterText.toLowerCase().trim();
   let html = "";
@@ -356,8 +336,19 @@ function renderModalOptions(filterText = "") {
 }
 
 // ==========================================
-// 5. EVENT HOOKS INTERACTION ASSIGNMENT
+// 5. EVENT HOOKS & MODE TOGGLE ASSIGNMENT
 // ==========================================
+
+function updateModeUI(activeBtn, targetMode) {
+  [btnModeConvert, btnModeTransfer, btnModeSwift].forEach(btn => btn.classList.remove('active'));
+  activeBtn.classList.add('active');
+  currentMode = targetMode;
+  calculateFees();
+}
+
+btnModeConvert.addEventListener('click', () => updateModeUI(btnModeConvert, 'convert'));
+btnModeTransfer.addEventListener('click', () => updateModeUI(btnModeTransfer, 'transfer'));
+btnModeSwift.addEventListener('click', () => updateModeUI(btnModeSwift, 'swift'));
 
 feeAmountInput.addEventListener('input', calculateFees);
 
