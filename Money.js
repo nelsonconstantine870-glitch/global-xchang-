@@ -7,6 +7,13 @@ const assets = [
     { type: 'crypto', id: 'ripple', symbol: 'XRP', name: 'Ripple' },
     { type: 'crypto', id: 'cardano', symbol: 'ADA', name: 'Cardano' },
     { type: 'crypto', id: 'dogecoin', symbol: 'DOGE', name: 'Dogecoin' },
+    { type: 'crypto', id: 'tether', symbol: 'USDT', name: 'Tether' },
+    { type: 'crypto', id: 'usd-coin', symbol: 'USDC', name: 'USD Coin' },
+    { type: 'crypto', id: 'the-open-network', symbol: 'TON', name: 'Toncoin' },
+    { type: 'crypto', id: 'avalanche-2', symbol: 'AVAX', name: 'Avalanche' },
+    { type: 'crypto', id: 'chainlink', symbol: 'LINK', name: 'Chainlink' },
+    { type: 'crypto', id: 'shiba-inu', symbol: 'SHIB', name: 'Shiba Inu' },
+    { type: 'crypto', id: 'pepe', symbol: 'PEPE', name: 'Pepe' },
 
     // National Currencies (Fiat)
     { type: 'fiat', id: 'usd', symbol: 'USD', name: 'US Dollar (United States)' },
@@ -29,7 +36,6 @@ const assets = [
     { type: 'fiat', id: 'egp', symbol: 'EGP', name: 'Egyptian Pound (Egypt)' },
     { type: 'fiat', id: 'pkr', symbol: 'PKR', name: 'Pakistani Rupee (Pakistan)' }
 ];
-
 // Fallback rates against 1 USD for country currencies that the free API tier doesn't serve directly
 const fiatUsdFallbacks = {
     'usd': 1.0, 'eur': 0.92, 'gbp': 0.79, 'jpy': 155.0, 'aud': 1.50, 'cad': 1.37, 
