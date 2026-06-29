@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global XChange // Calculator Engine</title>
+    <link rel="stylesheet" href="Style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="glass-container" style="max-width: 440px;">
+        <nav class="tab-navigation">
+            <a href="index.html" class="nav-tab"><i class="fa-solid fa-right-left"></i> Exchange</a>
+            <a href="New.html" class="nav-tab"><i class="fa-solid fa-building-columns"></i> Bank Fees</a>
+            <a href="Practice101.html" class="nav-tab active"><i class="fas fa-calculator"></i> Calculator</a>
+            <a href="Crypto.html" class="nav-tab"><i class="fa-solid fa-coins"></i> Crypto</a>
+        </nav>
+
+        <div class="calc-screen" style="background: rgba(8, 12, 24, 0.6); border: 1px solid var(--border-color); border-radius: 18px; padding: 20px; text-align: right; margin-bottom: 20px; min-height: 100px; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div id="calc-history" class="screen-history" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 4px;"></div>
+            <div id="calc-output" class="screen-output" style="font-size: 2.2rem; font-weight: 700; color: var(--text-main);">0</div>
+        </div>
+
+        <div class="calc-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+            <button class="btn btn-action" style="color: var(--parallel-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer; font-size: 1.2rem;" onclick="clearScreen()">C</button>
+            <button class="btn btn-action" style="color: var(--parallel-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer; font-size: 1.2rem;" onclick="appendOperator('/')">&divide;</button>
+            <button class="btn btn-action" style="color: var(--parallel-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer; font-size: 1.2rem;" onclick="appendOperator('*')">&times;</button>
+            <button class="btn btn-action" style="color: var(--parallel-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer; font-size: 1.2rem;" onclick="deleteLast()"><i class="fas fa-backspace"></i></button>
+
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('7')">7</button>
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('8')">8</button>
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('9')">9</button>
+            <button class="btn btn-operator" style="color: var(--official-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendOperator('-')">&minus;</button>
+
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('4')">4</button>
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('5')">5</button>
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('6')">6</button>
+            <button class="btn btn-operator" style="color: var(--official-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendOperator('+')">+</button>
+
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('1')">1</button>
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('2')">2</button>
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('3')">3</button>
+            <button class="btn btn-equals" style="grid-row: span 2; height: auto; background: var(--accent-gradient); border: none; border-radius: 12px; color: #fff; font-size: 1.5rem; cursor: pointer;" onclick="calculateResult()">=</button>
+
+            <button class="btn btn-zero" style="grid-column: span 2; color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('0')">0</button>
+            <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('.')">.</button>
+        </div>
+    </div>
+    <script src="Calculator.js"></script>
+</body>
+</html>
