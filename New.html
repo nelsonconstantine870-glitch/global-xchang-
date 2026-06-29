@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Fees</title>
+    <link rel="stylesheet" href="Style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="glass-container">
+        <nav class="tab-navigation">
+            <a href="index.html" class="nav-tab"><i class="fa-solid fa-right-left"></i> Exchange</a>
+            <a href="New.html" class="nav-tab active"><i class="fa-solid fa-building-columns"></i> Bank Fees</a>
+            <a href="Practice101.html" class="nav-tab"><i class="fas fa-calculator"></i> Calculator</a>
+            <a href="Crypto.html" class="nav-tab"><i class="fa-solid fa-coins"></i> Crypto</a>
+        </nav>
+
+        <header>
+            <h1><i class="fa-solid fa-building-columns text-gradient"></i> Fee Simulator</h1>
+            <p>Hidden Bank Deduction Diagnostics</p>
+        </header>
+
+        <div style="display: flex; gap: 6px; margin-bottom: 20px;">
+            <button id="btn-mode-convert" class="radio-option style-btn active" style="flex:1; padding:10px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:#fff; font-size:0.8rem; font-weight:600; cursor:pointer;">Convert Mode</button>
+            <button id="btn-mode-transfer" class="radio-option style-btn" style="flex:1; padding:10px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:#fff; font-size:0.8rem; font-weight:600; cursor:pointer;">Local Transfer</button>
+            <button id="btn-mode-swift" class="radio-option style-btn" style="flex:1; padding:10px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:#fff; font-size:0.8rem; font-weight:600; cursor:pointer;">SWIFT Wire</button>
+        </div>
+
+        <main class="converter-box">
+            <div class="conversion-row">
+                <div class="input-group">
+                    <label for="fee-amount">Base Capital</label>
+                    <input type="number" id="fee-amount" value="1000">
+                </div>
+                <div class="input-group" style="max-width: 110px;">
+                    <label for="fee-percentage">Fee Margin %</label>
+                    <input type="number" id="fee-percentage" value="2.5" step="0.01">
+                </div>
+            </div>
+
+            <div class="input-group" style="position: relative;">
+                <label for="bank-search">Lookup Bank Tier Profile</label>
+                <input type="text" id="bank-search" placeholder="Type bank name (e.g., Wise, GTBank)..." autocomplete="off">
+                <div id="bank-dropdown" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; max-height: 200px; overflow-y: auto; background: #0f172a; border: 1px solid var(--border-color); border-radius: 12px; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.5);"></div>
+            </div>
+
+            <div class="conversion-row">
+                <div class="select-box">
+                    <label>From Base</label>
+                    <div id="from-selector" class="custom-select-trigger">
+                        <span id="from-display">USD - United States Dollar</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="select-box">
+                    <label>To Target</label>
+                    <div id="to-selector" class="custom-select-trigger">
+                        <span id="to-display">NGN - Nigerian Naira</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-area" style="text-align: left; display: flex; flex-direction: column; gap: 14px;">
+                <div>
+                    <h4 style="font-size: 0.72rem; text-transform:uppercase; color: var(--text-muted); margin-bottom:4px; letter-spacing:0.5px;">Deductions Breakdown</h4>
+                    <p id="deduct-native" style="font-size: 1rem; font-weight: 600; margin-bottom:2px;"></p>
+                    <p id="deduct-foreign" style="font-size: 1rem; font-weight: 600; color:var(--parallel-color);"></p>
+                </div>
+                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05);">
+                <div>
+                    <h4 style="font-size: 0.72rem; text-transform:uppercase; color: var(--text-muted); margin-bottom:4px; letter-spacing:0.5px;">Remaining Pool Liquidity</h4>
+                    <p id="remain-native" style="font-size: 1rem; font-weight: 600; margin-bottom:2px;"></p>
+                    <p id="remain-foreign" style="font-size: 1rem; font-weight: 600; color:var(--official-color);"></p>
+                </div>
+            </div>
+
+            <div id="breakdown-notices" style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; padding: 4px; border-left: 2px solid var(--accent-glow); padding-left: 10px;"></div>
+        </main>
+    </div>
+
+    <div id="search-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Select Currency</h3>
+                <button id="close-modal-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="currency-search-input" placeholder="Filter assets...">
+            </div>
+            <div id="modal-options-list" class="options-list"></div>
+        </div>
+    </div>
+
+    <style>
+        .radio-option.style-btn.active {
+            background: #fff !important;
+            color: #0f172a !important;
+            font-weight: 700 !important;
+        }
+    </style>
+    <script src="Nel.js"></script>
+</body>
+</html>
