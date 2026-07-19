@@ -231,6 +231,50 @@ setAlertBtn.addEventListener('click', async () => {
         alertStatus.style.color = "#ef4444";
     }
 });
+// ==========================================
+// EMERGENCY ISOLATED NOTIFICATION TESTER
+// ==========================================
+const setAlertBtn = document.getElementById('setAlertBtn');
+const alertStatus = document.getElementById('alertStatus');
+
+setAlertBtn.innerText = "TEST SYSTEM NOTIFICATION";
+
+setAlertBtn.addEventListener('click', async () => {
+    alertStatus.innerText = "Requesting system access...";
+    
+    // 1. Force the prompt window
+    const permission = await Notification.requestPermission();
+    
+    if (permission !== 'granted') {
+        alertStatus.innerText = "STATUS: Blocked by Phone Settings.";
+        alertStatus.style.color = "#ef4444";
+        // Fallback to unblockable popup so you know the button works
+        alert("⚠️ Your phone's operating system blocked the banner, but the click works!");
+        return;
+    }
+
+    alertStatus.innerText = "STATUS: Allowed! Sending test in 3 seconds...";
+    alertStatus.style.color = "#fbbf24";
+
+    // 2. Wait 3 seconds, then shoot a direct system notification
+    setTimeout(() => {
+        try {
+            const testNotification = new Notification("IT WORKS! 🎉", {
+                body: "Your web app is officially communicating with your phone.",
+                requireInteraction: true,
+                vibrate: [200, 100, 200]
+            });
+
+            // Fallback backup if the system banner is hidden in your notification shade
+            alert("🎉 Notification fired! Check your screen top-bar / swipe down.");
+            alertStatus.innerText = "STATUS: Notification sent successfully!";
+            alertStatus.style.color = "#10b981";
+        } catch (err) {
+            alertStatus.innerText = "Error forcing banner popup.";
+            alert(`Fallback Alert: Click worked, but system threw error: ${err.message}`);
+        }
+    }, 3000);
+});
 
 amountInput.addEventListener('input', convertCurrency);
 setupSearchableDropdown('from');
