@@ -3,98 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Engine</title>
+    <title>Global XChange</title>
     <link rel="stylesheet" href="Style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="glass-container">
         <nav class="tab-navigation">
-            <a href="index.html" class="nav-tab"><i class="fa-solid fa-right-left"></i> Exchange</a>
+            <a href="index.html" class="nav-tab active"><i class="fa-solid fa-right-left"></i> Exchange</a>
             <a href="New.html" class="nav-tab"><i class="fa-solid fa-building-columns"></i> Bank Fees</a>
             <a href="Practice101.html" class="nav-tab"><i class="fas fa-calculator"></i> Calculator</a>
-            <a href="Crypto.html" class="nav-tab active"><i class="fa-solid fa-coins"></i> Crypto</a>
+            <a href="Crypto.html" class="nav-tab"><i class="fa-solid fa-coins"></i> Crypto</a>
         </nav>
 
         <header>
-            <h1><i class="fa-solid fa-bolt text-gradient"></i> Crypto Hub</h1>
-            <p>Cross-Asset Digital Platform Core</p>
+            <h1><i class="fa-solid fa-globe text-gradient"></i> Global XChange</h1>
+            <p>Official vs. Parallel Rates</p>
         </header>
+
+        <div class="rate-cards">
+            <div class="card parallel">
+                <h3>Parallel Market Value</h3>
+                <p id="parallel-badge">Loading...</p>
+            </div>
+            <div class="card official">
+                <h3>Official Market Value</h3>
+                <p id="official-badge">Loading...</p>
+            </div>
+        </div>
 
         <main class="converter-box">
             <div class="input-group">
-                <label for="amount">Volume / Amount</label>
-                <input type="number" id="amount" value="1" step="any">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" value="100">
             </div>
 
-            <div class="conversion-row" style="position: relative;">
-                <div class="select-box" style="position: relative;">
-                    <label>From Source</label>
-                    <div class="custom-select-trigger" id="fromSelected">BTC - Bitcoin</div>
-                    
-                    <div id="fromDropdown" class="dropdown-menu hidden" style="position: absolute; top: 100%; left: 0; width: 100%; background: #0f172a; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px; z-index: 1000; box-shadow: 0 15px 30px rgba(0,0,0,0.5); margin-top: 5px;">
-                        <input type="text" class="search-input" placeholder="Search code..." style="width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; font-size: 0.9rem;">
-                        <div class="options-list" style="max-height: 160px; overflow-y: auto;"></div>
+            <div class="conversion-row">
+                <div class="select-box">
+                    <label>From</label>
+                    <div id="from-selector" class="custom-select-trigger">
+                        <span id="from-display">USD - US Dollar</span>
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
                 </div>
-                
-                <button id="swapBtn" class="swap-btn">⇄</button>
-                
-                <div class="select-box" style="position: relative;">
-                    <label>To Target</label>
-                    <div class="custom-select-trigger" id="toSelected">USD - US Dollar (United States)</div>
-                    
-                    <div id="toDropdown" class="dropdown-menu hidden" style="position: absolute; top: 100%; left: 0; width: 100%; background: #0f172a; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px; z-index: 1000; box-shadow: 0 15px 30px rgba(0,0,0,0.5); margin-top: 5px;">
-                        <input type="text" class="search-input" placeholder="Search code..." style="width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; font-size: 0.9rem;">
-                        <div class="options-list" style="max-height: 160px; overflow-y: auto;"></div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="result-area" style="margin-bottom: 25px;">
-                <span class="toggle-label" style="display:block; margin-bottom: 5px; font-size: 0.75rem;">Calculated Valuation Result</span>
-                <div id="result" style="font-size: 1.35rem; font-weight: 700; color: var(--official-color); word-break: break-all;">0.00</div>
-            </div>
-
-            <!-- --- DYNAMIC BACKGROUND ALERT PANEL --- -->
-            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
-            
-            <div class="notification-panel" style="background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);">
-                <h3 style="font-size: 1rem; margin-bottom: 12px; color: #fff;"><i class="fa-solid fa-bell text-gradient"></i> Live Custom Drop Alert</h3>
-                
-                <div style="margin-bottom: 15px; font-size: 0.9rem; color: #94a3b8;">
-                    Target Pair Locked: <strong id="lockedPairDisplay" style="color: #fff;">BTC ➔ USD</strong>
-                </div>
-
-                <div class="input-group" style="margin-bottom: 15px;">
-                    <label for="dropPercentage">Alert if price drops more than (%)</label>
-                    <input type="number" id="dropPercentage" value="5" min="0.1" max="99" step="0.1" style="width: 100%; padding: 12px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main);">
-                </div>
-
-                <button id="setAlertBtn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; transition: opacity 0.2s;">
-                    Lock Custom Pair Guard
+                <button id="swap-btn" class="swap-btn">
+                    <i class="fa-solid fa-right-left"></i>
                 </button>
-                <div id="alertStatus" style="font-size: 0.8rem; margin-top: 8px; color: #10b981; text-align: center;"></div>
+
+                <div class="select-box">
+                    <label>To</label>
+                    <div id="to-selector" class="custom-select-trigger">
+                        <span id="to-display">NGN - Nigerian Naira</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="market-toggle">
+                <span class="toggle-label">Rate Engine:</span>
+                <div class="radio-inputs">
+                    <label class="radio-option">
+                        <input type="radio" name="market-type" value="parallel" checked>
+                        <span class="name">Parallel Rate</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="market-type" value="official">
+                        <span class="name">Official Rate</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="result-area">
+                <p id="result-text">Enter value...</p>
+                <small id="rate-timestamp"></small>
             </div>
         </main>
     </div>
 
-    <style>
-        .dropdown-menu.hidden { display: none !important; }
-        .option-item {
-            padding: 10px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 8px;
-            font-size: 0.88rem;
-        }
-        .option-item:hover { background: rgba(255,255,255,0.04); }
-        .option-item strong { color: var(--accent-glow); }
-        #setAlertBtn:hover { opacity: 0.9; }
-    </style>
-    <script src="Money.js"></script>
+    <div id="notification-container"></div>
+
+    <div id="search-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Select Currency</h3>
+                <button id="close-modal-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="currency-search-input" placeholder="Search country or code...">
+            </div>
+            <div id="modal-options-list" class="options-list"></div>
+        </div>
+    </div>
+
+    <script src="Mel.js"></script>
 </body>
 </html>
 
