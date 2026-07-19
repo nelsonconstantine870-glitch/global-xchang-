@@ -11,7 +11,6 @@
     <div class="glass-container" style="max-width: 440px;">
         <nav class="tab-navigation">
             <a href="index.html" class="nav-tab"><i class="fa-solid fa-right-left"></i> Exchange</a>
-            <a href="New.html" class="nav-tab"><i class="fa-solid fa-building-columns"></i> Bank Fees</a>
             <a href="Practice101.html" class="nav-tab active"><i class="fas fa-calculator"></i> Calculator</a>
             <a href="Crypto.html" class="nav-tab"><i class="fa-solid fa-coins"></i> Crypto</a>
         </nav>
@@ -21,7 +20,7 @@
             <div id="calc-output" class="screen-output" style="font-size: 2.2rem; font-weight: 700; color: var(--text-main);">0</div>
         </div>
 
-        <div class="calc-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+        <div class="calc-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
             <button class="btn btn-action" style="color: var(--parallel-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer; font-size: 1.2rem;" onclick="clearScreen()">C</button>
             <button class="btn btn-action" style="color: var(--parallel-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer; font-size: 1.2rem;" onclick="appendOperator('/')">&divide;</button>
             <button class="btn btn-action" style="color: var(--parallel-color); background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer; font-size: 1.2rem;" onclick="appendOperator('*')">&times;</button>
@@ -45,7 +44,16 @@
             <button class="btn btn-zero" style="grid-column: span 2; color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('0')">0</button>
             <button class="btn" style="color: #fff; background: rgba(8,12,24,0.4); border: 1px solid var(--border-color); height: 60px; border-radius: 12px; cursor: pointer;" onclick="appendNumber('.')">.</button>
         </div>
+
+        <!-- Sleek running log layout -->
+        <div id="history-container" style="background: rgba(8, 12, 24, 0.4); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; max-height: 150px; overflow-y: auto;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px;">Recent Calculations</div>
+            <div id="history-list" style="display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; text-align: left;">
+                <div style="color: var(--text-muted); font-style: italic; font-size: 0.8rem;">No calculations yet</div>
+            </div>
+        </div>
     </div>
     <script src="Calculator.js"></script>
 </body>
 </html>
+
