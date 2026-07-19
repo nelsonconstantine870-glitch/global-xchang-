@@ -231,10 +231,9 @@ setAlertBtn.addEventListener('click', async () => {
         alertStatus.style.color = "#ef4444";
     }
 });
-//
+
 amountInput.addEventListener('input', convertCurrency);
 setupSearchableDropdown('from');
 setupSearchableDropdown('to');
 updateAlertUI();
 convertCurrency();
-
