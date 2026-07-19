@@ -2,9 +2,11 @@
 let currentInput = '0';
 let currentExpression = '';
 let isCalculationDone = false;
+let pastCalculations = []; // Stores list of past entries
 
 const outputDisplay = document.getElementById('calc-output');
 const historyDisplay = document.getElementById('calc-history');
+const historyListElement = document.getElementById('history-list');
 
 // Updates display values securely
 function updateDisplay() {
@@ -65,22 +67,20 @@ function deleteLast() {
 
 // Execute logic engine cleanly
 function calculateResult() {
-    if (currentExpression === '') return;
+    if (currentExpression === '' || isCalculationDone) return;
     
-    // Merge history string logic with pending input variables
     let finalExpression = currentExpression + currentInput;
-    
-    // Strip malicious non-mathematical code blocks out prior to execution 
     let sanitizedExpression = finalExpression.replace(/[^0-9+\-*/().\s]/g, '');
 
     try {
-        // Safe evaluation of the math formulation using Function constructors
         let evalResult = new Function(`return (${sanitizedExpression})`)();
         
-        // Handle long decimals nicely
         if (evalResult % 1 !== 0) {
             evalResult = parseFloat(evalResult.toFixed(4));
         }
+
+        // Save entry into our log list tracking array
+        saveToHistory(finalExpression, String(evalResult));
 
         currentExpression = finalExpression + ' =';
         currentInput = String(evalResult);
@@ -91,4 +91,46 @@ function calculateResult() {
     }
     
     updateDisplay();
+}
+
+// Save calculation structure to history log
+function saveToHistory(expression, result) {
+    pastCalculations.unshift({ expression: expression, result: result });
+    
+    // Keep list capped to last 4 interactions to save clean view spacing
+    if (pastCalculations.length > 4) {
+        pastCalculations.pop();
+    }
+    
+    renderHistoryList();
+}
+
+// Render dynamic log updates to UI
+function renderHistoryList() {
+    historyListElement.innerHTML = '';
+    
+    if (pastCalculations.length === 0) {
+        historyListElement.innerHTML = `<div style="color: var(--text-muted); font-style: italic; font-size: 0.8rem;">No calculations yet</div>`;
+        return;
+    }
+
+    pastCalculations.forEach((item) => {
+        const row = document.createElement('div');
+        row.style.cssText = "display: flex; justify-content: space-between; padding: 6px; cursor: pointer; border-radius: 6px; transition: background 0.2s; background: rgba(255,255,255,0.02);";
+        row.innerHTML = `<span style="color: var(--text-muted); max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.expression}</span><strong style="color: var(--official-color);">= ${item.result}</strong>`;
+        
+        // Add hover visual cue
+        row.addEventListener('mouseenter', () => row.style.background = "rgba(255,255,255,0.06)");
+        row.addEventListener('mouseleave', () => row.style.background = "rgba(255,255,255,0.02)");
+        
+        // Restore values instantly on click to allow modification
+        row.addEventListener('click', () => {
+            currentInput = item.result;
+            currentExpression = '';
+            isCalculationDone = false;
+            updateDisplay();
+        });
+
+        historyListElement.appendChild(row);
+    });
 }
