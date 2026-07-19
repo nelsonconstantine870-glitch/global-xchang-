@@ -51,20 +51,35 @@
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="appMode">Profile Deduction Style Framework</label>
-                <select id="appMode" style="width: 100%; padding: 16px; background: rgba(8, 12, 24, 0.5); border: 1px solid var(--border-color); border-radius: 16px; color: var(--text-main); font-size: 1rem; outline: none; cursor: pointer;">
-                    <option value="standard" selected>Standard Rate (Raw Market Index)</option>
-                    <option value="coinstats">CoinStats Style (0.2% Trading Fee)</option>
-                    <option value="koinly">Koinly Style (15% Baseline Tax)</option>
-                    <option value="summ">Summ Style (30% Whale Tax Bracket)</option>
-                    <option value="exodus">Binance Style Net Cashout (2.5% Spread)</option>
-                </select>
+            <div class="result-area" style="margin-bottom: 25px;">
+                <span class="toggle-label" style="display:block; margin-bottom: 5px; font-size: 0.75rem;">Calculated Valuation Result</span>
+                <div id="result" style="font-size: 1.35rem; font-weight: 700; color: var(--official-color); word-break: break-all;">0.00</div>
             </div>
 
-            <div class="result-area">
-                <span class="toggle-label" style="display:block; margin-bottom: 5px; font-size: 0.75rem;">Calculated Multi-App Valuation Result</span>
-                <div id="result" style="font-size: 1.35rem; font-weight: 700; color: var(--official-color); word-break: break-all;">0.00</div>
+            <!-- --- BACKGROUND ALERT CONFIG PANEL --- -->
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+            
+            <div class="notification-panel" style="background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);">
+                <h3 style="font-size: 1rem; margin-bottom: 12px; color: #fff;"><i class="fa-solid fa-bell text-gradient"></i> Background Drop Alerts</h3>
+                
+                <div class="input-group" style="margin-bottom: 12px;">
+                    <label for="alertPair">Select Tracked Pair (Max 3 Combinations)</label>
+                    <select id="alertPair" style="width: 100%; padding: 12px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 0.9rem; cursor: pointer;">
+                        <option value="BTC-USD">Bitcoin to USD (BTC/USD)</option>
+                        <option value="ETH-EUR">Ethereum to Euro (ETH/EUR)</option>
+                        <option value="SOL-USD">Solana to USD (SOL/USD)</option>
+                    </select>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <label for="dropPercentage">Alert if price drops more than (%)</label>
+                    <input type="number" id="dropPercentage" value="5" min="0.1" max="99" step="0.1" style="width: 100%; padding: 12px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main);">
+                </div>
+
+                <button id="setAlertBtn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; transition: opacity 0.2s;">
+                    Save Active Notification Guard
+                </button>
+                <div id="alertStatus" style="font-size: 0.8rem; margin-top: 8px; color: #10b981; text-align: center;"></div>
             </div>
         </main>
     </div>
@@ -82,7 +97,9 @@
         }
         .option-item:hover { background: rgba(255,255,255,0.04); }
         .option-item strong { color: var(--accent-glow); }
+        #setAlertBtn:hover { opacity: 0.9; }
     </style>
     <script src="Money.js"></script>
 </body>
 </html>
+
