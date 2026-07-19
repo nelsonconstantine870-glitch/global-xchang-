@@ -47,6 +47,23 @@ let toAsset = assets.find(a => a.symbol === 'USD');
 const amountInput = document.getElementById('amount');
 const resultDiv = document.getElementById('result');
 const swapBtn = document.getElementById('swapBtn');
+const lockedPairDisplay = document.getElementById('lockedPairDisplay');
+
+function updateAlertUI() {
+    if(lockedPairDisplay) {
+        lockedPairDisplay.innerText = `${fromAsset.name} (${fromAsset.symbol}) ➔ ${toAsset.name} (${toAsset.symbol})`;
+    }
+}
+
+async function getPriceInUSD(asset) {
+    if (asset.type === 'crypto') {
+        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${asset.id}&vs_currencies=usd`);
+        const data = await res.json();
+        return data[asset.id]['usd'];
+    } else {
+        return 1 / (fiatUsdFallbacks[asset.id] || 1);
+    }
+}
 
 async function convertCurrency() {
     const amount = parseFloat(amountInput.value);
@@ -56,29 +73,14 @@ async function convertCurrency() {
     }
     resultDiv.innerText = "Fetching live market prices...";
     try {
-        let fromPriceInUSD = 1;
-        if (fromAsset.type === 'crypto') {
-            const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${fromAsset.id}&vs_currencies=usd`);
-            const data = await res.json();
-            fromPriceInUSD = data[fromAsset.id]['usd'];
-        } else {
-            fromPriceInUSD = 1 / (fiatUsdFallbacks[fromAsset.id] || 1);
-        }
-
-        let toPriceInUSD = 1;
-        if (toAsset.type === 'crypto') {
-            const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${toAsset.id}&vs_currencies=usd`);
-            const data = await res.json();
-            toPriceInUSD = data[toAsset.id]['usd'];
-        } else {
-            toPriceInUSD = 1 / (fiatUsdFallbacks[toAsset.id] || 1);
-        }
+        let fromPriceInUSD = await getPriceInUSD(fromAsset);
+        let toPriceInUSD = await getPriceInUSD(toAsset);
 
         let finalValue = (amount * fromPriceInUSD) / toPriceInUSD;
         const decimals = toAsset.type === 'crypto' ? 6 : 2;
         resultDiv.innerText = `${amount.toLocaleString()} ${fromAsset.symbol} = ${finalValue.toLocaleString(undefined, {minimumFractionDigits: decimals, maximumFractionDigits: decimals})} ${toAsset.symbol}`;
     } catch (error) {
-        resultDiv.innerText = "Network lag. Trying again...";
+        resultDiv.innerText = "Network sync lag...";
     }
 }
 
@@ -118,6 +120,7 @@ function renderOptions(searchTerm, listElement, type) {
             else toAsset = asset;
             document.getElementById(`${type}Selected`).innerText = `${asset.symbol} - ${asset.name}`;
             document.getElementById(`${type}Dropdown`).classList.add('hidden');
+            updateAlertUI();
             convertCurrency();
         });
         listElement.appendChild(row);
@@ -135,112 +138,62 @@ swapBtn.addEventListener('click', () => {
     toAsset = temp;
     document.getElementById(`fromSelected`).innerText = `${fromAsset.symbol} - ${fromAsset.name}`;
     document.getElementById(`toSelected`).innerText = `${toAsset.symbol} - ${toAsset.name}`;
+    updateAlertUI();
     convertCurrency();
 });
 
 // ==========================================
-// BACKGROUND OFF-SITE ALERTS LOGIC ENGINE
+// FULLY DYNAMIC ANY-PAIR ALERT ENGINE
 // ==========================================
 const setAlertBtn = document.getElementById('setAlertBtn');
 const alertStatus = document.getElementById('alertStatus');
 
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(err => console.log("SW Register skipped: ", err));
+    navigator.serviceWorker.register('sw.js').catch(err => console.log("SW failed: ", err));
 }
 
 setAlertBtn.addEventListener('click', async () => {
     if (!('Notification' in window)) {
-        alertStatus.innerText = "Notifications not supported by this browser.";
-        alertStatus.style.color = "#ef4444";
+        alertStatus.innerText = "Notifications not supported.";
         return;
     }
-
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
         alertStatus.innerText = "Please allow system notifications first.";
-        alertStatus.style.color = "#ef4444";
         return;
     }
 
-    const selectedPair = document.getElementById('alertPair').value;
     const dropPct = parseFloat(document.getElementById('dropPercentage').value);
+    if(isNaN(dropPct) || dropPct <= 0) {
+        alertStatus.innerText = "Enter a valid percentage drop target.";
+        return;
+    }
 
     try {
-        let currentPrice = 0;
-        if(selectedPair === "BTC-USD") {
-            let res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd`);
-            let data = await res.json();
-            currentPrice = data.bitcoin.usd;
-        } else if (selectedPair === "ETH-EUR") {
-            let res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur`);
-            let data = await res.json();
-            currentPrice = data.ethereum.eur;
-        } else if (selectedPair === "SOL-USD") {
-            let res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd`);
-            let data = await res.json();
-            currentPrice = data.solana.usd;
-        }
+        let fromPriceInUSD = await getPriceInUSD(fromAsset);
+        let toPriceInUSD = await getPriceInUSD(toAsset);
+        let startingCrossRate = fromPriceInUSD / toPriceInUSD;
 
-        const alertConfig = { pair: selectedPair, basePrice: currentPrice, dropThreshold: dropPct };
-        localStorage.setItem('crypto_alert_config', JSON.stringify(alertConfig));
+        const alertConfig = {
+            fromAsset: fromAsset,
+            toAsset: toAsset,
+            baseCrossRate: startingCrossRate,
+            dropThreshold: dropPct
+        };
         
-        alertStatus.innerText = `Guard Configured! Monitoring ${selectedPair} from baseline: ${currentPrice}`;
+        const cache = await caches.open('alert-config');
+        await cache.put('config.json', new Response(JSON.stringify(alertConfig)));
+        
+        alertStatus.innerText = `Guard active! Tracking ${fromAsset.symbol}/${toAsset.symbol} from ${startingCrossRate.toFixed(4)}`;
         alertStatus.style.color = "#10b981";
-
-        startBackgroundMonitor();
     } catch(err) {
-        alertStatus.innerText = "Error establishing price check. Try again.";
-        alertStatus.style.color = "#ef4444";
+        alertStatus.innerText = "Error establishing market baseline rates.";
     }
 });
-
-function startBackgroundMonitor() {
-    // Check every 30 seconds
-    setInterval(async () => {
-        const rawConfig = localStorage.getItem('crypto_alert_config');
-        if(!rawConfig) return;
-        
-        const config = JSON.parse(rawConfig);
-        try {
-            let freshPrice = 0;
-            if(config.pair === "BTC-USD") {
-                let res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd`);
-                let data = await res.json();
-                freshPrice = data.bitcoin.usd;
-            } else if (config.pair === "ETH-EUR") {
-                let res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur`);
-                let data = await res.json();
-                freshPrice = data.ethereum.eur;
-            } else if (config.pair === "SOL-USD") {
-                let res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd`);
-                let data = await res.json();
-                freshPrice = data.solana.usd;
-            }
-
-            const dropCalculated = ((config.basePrice - freshPrice) / config.basePrice) * 100;
-
-            if (dropCalculated >= config.dropThreshold) {
-                if (Notification.permission === 'granted') {
-                    navigator.serviceWorker.ready.then(registration => {
-                        registration.showNotification('Crypto Market Crash Alert!', {
-                            body: `${config.pair} dropped by ${dropCalculated.toFixed(2)}%! Live: ${freshPrice}`,
-                            tag: 'price-drop-alert'
-                        });
-                    });
-                    localStorage.removeItem('crypto_alert_config'); // Reset target
-                    if(document.getElementById('alertStatus')) {
-                        document.getElementById('alertStatus').innerText = "Alert triggered!";
-                    }
-                }
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    }, 30000);
-}
 
 amountInput.addEventListener('input', convertCurrency);
 setupSearchableDropdown('from');
 setupSearchableDropdown('to');
+updateAlertUI();
 convertCurrency();
-if(localStorage.getItem('crypto_alert_config')) startBackgroundMonitor();
+
