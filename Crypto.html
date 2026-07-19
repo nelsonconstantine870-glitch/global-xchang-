@@ -56,19 +56,14 @@
                 <div id="result" style="font-size: 1.35rem; font-weight: 700; color: var(--official-color); word-break: break-all;">0.00</div>
             </div>
 
-            <!-- --- BACKGROUND ALERT CONFIG PANEL --- -->
+            <!-- --- DYNAMIC BACKGROUND ALERT PANEL --- -->
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
             
             <div class="notification-panel" style="background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);">
-                <h3 style="font-size: 1rem; margin-bottom: 12px; color: #fff;"><i class="fa-solid fa-bell text-gradient"></i> Background Drop Alerts</h3>
+                <h3 style="font-size: 1rem; margin-bottom: 12px; color: #fff;"><i class="fa-solid fa-bell text-gradient"></i> Live Custom Drop Alert</h3>
                 
-                <div class="input-group" style="margin-bottom: 12px;">
-                    <label for="alertPair">Select Tracked Pair (Max 3 Combinations)</label>
-                    <select id="alertPair" style="width: 100%; padding: 12px; background: #0f172a; border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 0.9rem; cursor: pointer;">
-                        <option value="BTC-USD">Bitcoin to USD (BTC/USD)</option>
-                        <option value="ETH-EUR">Ethereum to Euro (ETH/EUR)</option>
-                        <option value="SOL-USD">Solana to USD (SOL/USD)</option>
-                    </select>
+                <div style="margin-bottom: 15px; font-size: 0.9rem; color: #94a3b8;">
+                    Target Pair Locked: <strong id="lockedPairDisplay" style="color: #fff;">BTC ➔ USD</strong>
                 </div>
 
                 <div class="input-group" style="margin-bottom: 15px;">
@@ -77,7 +72,7 @@
                 </div>
 
                 <button id="setAlertBtn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; transition: opacity 0.2s;">
-                    Save Active Notification Guard
+                    Lock Custom Pair Guard
                 </button>
                 <div id="alertStatus" style="font-size: 0.8rem; margin-top: 8px; color: #10b981; text-align: center;"></div>
             </div>
@@ -102,4 +97,3 @@
     <script src="Money.js"></script>
 </body>
 </html>
-
