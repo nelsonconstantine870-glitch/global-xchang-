@@ -141,9 +141,8 @@ swapBtn.addEventListener('click', () => {
     updateAlertUI();
     convertCurrency();
 });
-
 // ==========================================
-// FULLY DYNAMIC ANY-PAIR ALERT ENGINE
+// PURE IMMEDIATE PROMPT ALERT ENGINE
 // ==========================================
 const setAlertBtn = document.getElementById('setAlertBtn');
 const alertStatus = document.getElementById('alertStatus');
@@ -157,9 +156,13 @@ setAlertBtn.addEventListener('click', async () => {
         alertStatus.innerText = "Notifications not supported.";
         return;
     }
+
+    // 1. Instantly trigger the window prompt before running calculations
     const permission = await Notification.requestPermission();
+    
     if (permission !== 'granted') {
-        alertStatus.innerText = "Please allow system notifications first.";
+        alertStatus.innerText = "Blocked. Please clear site settings via the URL lock icon.";
+        alertStatus.style.color = "#ef4444";
         return;
     }
 
@@ -168,6 +171,9 @@ setAlertBtn.addEventListener('click', async () => {
         alertStatus.innerText = "Enter a valid percentage drop target.";
         return;
     }
+
+    alertStatus.innerText = "Synchronizing market baseline index...";
+    alertStatus.style.color = "#fbbf24";
 
     try {
         let fromPriceInUSD = await getPriceInUSD(fromAsset);
@@ -188,8 +194,10 @@ setAlertBtn.addEventListener('click', async () => {
         alertStatus.style.color = "#10b981";
     } catch(err) {
         alertStatus.innerText = "Error establishing market baseline rates.";
+        alertStatus.style.color = "#ef4444";
     }
 });
+
 
 amountInput.addEventListener('input', convertCurrency);
 setupSearchableDropdown('from');
