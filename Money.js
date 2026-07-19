@@ -47,13 +47,6 @@ let toAsset = assets.find(a => a.symbol === 'USD');
 const amountInput = document.getElementById('amount');
 const resultDiv = document.getElementById('result');
 const swapBtn = document.getElementById('swapBtn');
-const lockedPairDisplay = document.getElementById('lockedPairDisplay');
-
-function updateAlertUI() {
-    if(lockedPairDisplay) {
-        lockedPairDisplay.innerText = `${fromAsset.name} (${fromAsset.symbol}) ➔ ${toAsset.name} (${toAsset.symbol})`;
-    }
-}
 
 async function getPriceInUSD(asset) {
     if (asset.type === 'crypto') {
@@ -120,7 +113,6 @@ function renderOptions(searchTerm, listElement, type) {
             else toAsset = asset;
             document.getElementById(`${type}Selected`).innerText = `${asset.symbol} - ${asset.name}`;
             document.getElementById(`${type}Dropdown`).classList.add('hidden');
-            updateAlertUI();
             convertCurrency();
         });
         listElement.appendChild(row);
@@ -138,102 +130,10 @@ swapBtn.addEventListener('click', () => {
     toAsset = temp;
     document.getElementById(`fromSelected`).innerText = `${fromAsset.symbol} - ${fromAsset.name}`;
     document.getElementById(`toSelected`).innerText = `${toAsset.symbol} - ${toAsset.name}`;
-    updateAlertUI();
     convertCurrency();
-});
-
-// ==========================================
-// DUAL-LAYER TRIPLE-SAFE ALERT ENGINE
-// ==========================================
-const setAlertBtn = document.getElementById('setAlertBtn');
-const alertStatus = document.getElementById('alertStatus');
-let foregroundInterval = null;
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(err => console.log("SW failed: ", err));
-}
-
-setAlertBtn.addEventListener('click', async () => {
-    if (!('Notification' in window)) {
-        alertStatus.innerText = "Notifications not supported.";
-        return;
-    }
-
-    // 1. Instantly trigger the window prompt before running calculations
-    const permission = await Notification.requestPermission();
-    
-    if (permission !== 'granted') {
-        alertStatus.innerText = "Blocked. Please clear site settings via the URL lock icon.";
-        alertStatus.style.color = "#ef4444";
-        return;
-    }
-
-    const dropPct = parseFloat(document.getElementById('dropPercentage').value);
-    if(isNaN(dropPct) || dropPct <= 0) {
-        alertStatus.innerText = "Enter a valid percentage drop target.";
-        return;
-    }
-
-    alertStatus.innerText = "Synchronizing market baseline index...";
-    alertStatus.style.color = "#fbbf24";
-
-    try {
-        let fromPriceInUSD = await getPriceInUSD(fromAsset);
-        let toPriceInUSD = await getPriceInUSD(toAsset);
-        let startingCrossRate = fromPriceInUSD / toPriceInUSD;
-
-        const alertConfig = {
-            fromAsset: fromAsset,
-            toAsset: toAsset,
-            baseCrossRate: startingCrossRate,
-            dropThreshold: dropPct
-        };
-        
-        // Save to Cache storage configuration
-        const cache = await caches.open('alert-config');
-        await cache.put('config.json', new Response(JSON.stringify(alertConfig)));
-        
-        alertStatus.innerText = `Guard active! Tracking ${fromAsset.symbol}/${toAsset.symbol} from ${startingCrossRate.toFixed(4)}`;
-        alertStatus.style.color = "#10b981";
-
-        // Reset any existing active fallback loop before starting a fresh one
-        if (foregroundInterval) clearInterval(foregroundInterval);
-
-        // Active Foreground Loop: Fires every 15 seconds directly in the tab layout
-        foregroundInterval = setInterval(async () => {
-            try {
-                let liveFrom = await getPriceInUSD(fromAsset);
-                let liveTo = await getPriceInUSD(toAsset);
-                let liveRate = liveFrom / liveTo;
-                
-                let dropCalculated = ((startingCrossRate - liveRate) / startingCrossRate) * 100;
-                console.log(`Checking foreground live drop: ${dropCalculated.toFixed(4)}%`);
-
-                if (dropCalculated >= dropPct) {
-                    // System Notification Fallback
-                    new Notification('Asset Target Triggered! (Live)', {
-                        body: `${fromAsset.symbol}/${toAsset.symbol} fell by ${dropCalculated.toFixed(2)}%! Value: ${liveRate.toFixed(4)}`,
-                        requireInteraction: true
-                    });
-                    
-                    // Unblockable standard browser pop-up prompt window
-                    alert(`🚨 MARKET ALERT: ${fromAsset.symbol}/${toAsset.symbol} dropped by ${dropCalculated.toFixed(2)}%!`);
-                    
-                    clearInterval(foregroundInterval); // Turn off guard to prevent spamming popups
-                }
-            } catch(e) {
-                console.error("Foreground tracking sync lag...", e);
-            }
-        }, 15000);
-
-    } catch(err) {
-        alertStatus.innerText = "Error establishing market baseline rates.";
-        alertStatus.style.color = "#ef4444";
-    }
 });
 
 amountInput.addEventListener('input', convertCurrency);
 setupSearchableDropdown('from');
 setupSearchableDropdown('to');
-updateAlertUI();
 convertCurrency();
