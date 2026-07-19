@@ -141,11 +141,13 @@ swapBtn.addEventListener('click', () => {
     updateAlertUI();
     convertCurrency();
 });
+
 // ==========================================
-// PURE IMMEDIATE PROMPT ALERT ENGINE
+// DUAL-LAYER TRIPLE-SAFE ALERT ENGINE
 // ==========================================
 const setAlertBtn = document.getElementById('setAlertBtn');
 const alertStatus = document.getElementById('alertStatus');
+let foregroundInterval = null;
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(err => console.log("SW failed: ", err));
@@ -187,17 +189,48 @@ setAlertBtn.addEventListener('click', async () => {
             dropThreshold: dropPct
         };
         
+        // Save to Cache storage configuration
         const cache = await caches.open('alert-config');
         await cache.put('config.json', new Response(JSON.stringify(alertConfig)));
         
         alertStatus.innerText = `Guard active! Tracking ${fromAsset.symbol}/${toAsset.symbol} from ${startingCrossRate.toFixed(4)}`;
         alertStatus.style.color = "#10b981";
+
+        // Reset any existing active fallback loop before starting a fresh one
+        if (foregroundInterval) clearInterval(foregroundInterval);
+
+        // Active Foreground Loop: Fires every 15 seconds directly in the tab layout
+        foregroundInterval = setInterval(async () => {
+            try {
+                let liveFrom = await getPriceInUSD(fromAsset);
+                let liveTo = await getPriceInUSD(toAsset);
+                let liveRate = liveFrom / liveTo;
+                
+                let dropCalculated = ((startingCrossRate - liveRate) / startingCrossRate) * 100;
+                console.log(`Checking foreground live drop: ${dropCalculated.toFixed(4)}%`);
+
+                if (dropCalculated >= dropPct) {
+                    // System Notification Fallback
+                    new Notification('Asset Target Triggered! (Live)', {
+                        body: `${fromAsset.symbol}/${toAsset.symbol} fell by ${dropCalculated.toFixed(2)}%! Value: ${liveRate.toFixed(4)}`,
+                        requireInteraction: true
+                    });
+                    
+                    // Unblockable standard browser pop-up prompt window
+                    alert(`🚨 MARKET ALERT: ${fromAsset.symbol}/${toAsset.symbol} dropped by ${dropCalculated.toFixed(2)}%!`);
+                    
+                    clearInterval(foregroundInterval); // Turn off guard to prevent spamming popups
+                }
+            } catch(e) {
+                console.error("Foreground tracking sync lag...", e);
+            }
+        }, 15000);
+
     } catch(err) {
         alertStatus.innerText = "Error establishing market baseline rates.";
         alertStatus.style.color = "#ef4444";
     }
 });
-
 
 amountInput.addEventListener('input', convertCurrency);
 setupSearchableDropdown('from');
