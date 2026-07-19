@@ -1,8 +1,8 @@
 const SPECIAL_PARALLEL_OVERRIDES = {
-    "NGN": 1392.50,  
-    "ARS": 1415.00,   
-    "EGP": 54.25,    
-    "VES": 745.00
+    "NGN": 1417.50,  
+    "ARS": 1530.00,   
+    "EGP": 50.86,    
+    "VES": 850.00
 };
 
 const GLOBAL_DEFAULT_SPREAD = 0.05; 
